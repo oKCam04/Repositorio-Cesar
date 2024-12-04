@@ -2,8 +2,7 @@ let votos = [0,0,0,0]; //inicializar votos
 let div=document.querySelector("#div"); //mostar la api 
 //parte de cuando vas a cerrar las votaciones
 let resultados=document.getElementById("resultados");
-let cerrar=document.querySelector("#cerrar")
-cerrar.addEventListener("click",()=>{
+document.querySelector("#cerrar").addEventListener("click",()=>{
   resultados.innerHTML=`
   <h1>Resultados</h1>
   <table>
@@ -32,29 +31,10 @@ cerrar.addEventListener("click",()=>{
     </tr>
     </tbody>
   </table>
+
   `;
   votos=[0,0,0,0];
 });
-//Login cuando te registras y todo sale bien te deja ingresar al portal para que votes
-let btn=document.querySelector("#btn");
-btn.addEventListener("click",()=>{
-  let user = document.querySelector("#usuario").value;
-  let contra = document.querySelector("#contrasena").value;
-  fetch("https://raw.githubusercontent.com/cesarmcuellar/Elecciones/refs/heads/main/administrador.json")
-   .then(respuesta=>respuesta.json())
-   .then (usuarios=>{
-    console.log(usuarios);
-    let admin=usuarios.username;
-    let pass=usuarios.password;
-    if(user==admin && contra==pass){
-      alert("Contraseña correcta")
-      window.location.href = "./app.html";
-    }else{
-      alert("Contraseña incorrecta")
-    }
-   })
-  });
-  
 
 //componente de consumo api, mostrando todo los archivos 
 fetch("https://raw.githubusercontent.com/cesarmcuellar/Elecciones/refs/heads/main/candidatos.json")
@@ -91,5 +71,22 @@ fetch("https://raw.githubusercontent.com/cesarmcuellar/Elecciones/refs/heads/mai
   
 
 
+//Login cuando te registras y todo sale bien te deja ingresar al portal para que votes
+document.querySelector("#btn").addEventListener("click",()=>{
+let user = document.querySelector("#usuario").value;
+let contra = document.querySelector("#contrasena").value;
+fetch("https://raw.githubusercontent.com/cesarmcuellar/Elecciones/refs/heads/main/administrador.json")
+ .then(respuesta=>respuesta.json())
+ .then (usuarios=>{
+  let admin=usuarios.username;
+  let pass=usuarios.password;
+  if(user==admin && contra==pass){
+    alert("Contraseña correcta")
+    window.location.href = "./app.html";
+  }else{
+    alert("Contraseña incorrecta")
+  }
+ })
+});
 
 
