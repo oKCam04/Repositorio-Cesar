@@ -78,6 +78,7 @@ let contra = document.querySelector("#contrasena").value;
 fetch("https://raw.githubusercontent.com/cesarmcuellar/Elecciones/refs/heads/main/administrador.json")
  .then(respuesta=>respuesta.json())
  .then (usuarios=>{
+  console.log(usuarios);
   let admin=usuarios.username;
   let pass=usuarios.password;
   if(user==admin && contra==pass){
@@ -86,7 +87,7 @@ fetch("https://raw.githubusercontent.com/cesarmcuellar/Elecciones/refs/heads/mai
   }else{
     alert("Contraseña incorrecta")
   }
- })
+ });
 });
 
 
