@@ -1,0 +1,12 @@
+pip install virtualenv primera vez 
+python -m venv entorno creando el entorno
+
+activate.bat 
+
+pip freeze para ver instalaciones  
+
+pip install flask
+
+para pasar los requerimientos en un.txt 
+pip freeze > requirements.txt
+pip install -r requirements.txt

@@ -1,0 +1,124 @@
+{ 
+    codigo:2874057,
+    programa:ObjectId('67c89e7a13b1e1edf899116c'),
+    aprendices:[
+        {
+            nombre:"Valery",
+            correo:"Valery@gmail.com"
+        }
+    ]
+
+}
+
+
+[
+    {
+
+      "nombre": "Análisis y Desarrollo de Software",
+      "tipo": "Tecnólogo",
+      "duracion": 21
+    },
+    {
+      
+      "nombre": "Gestión de Mercados",
+      "tipo": "Tecnólogo",
+      "duracion": 27
+    },
+    {
+    
+      "nombre": "Mantenimiento de Equipos de Cómputo",
+      "tipo": "Técnico",
+      "duracion": 21
+    }
+  ]
+
+
+  {
+    codigo: 2874060,
+    programa: ObjectId('67c8a91113b1e1edf8991171'),
+    aprendices: [
+      {
+        nombre: 'Dani',
+        correo: 'Dani@gmail.com'
+      }
+    ]
+  }
+  
+  db.Comments.insertOne({titulo:"La yz",contenido:"es una moto 2t muy veloz y destinada al running",url:"http//mivacaloa.com",autor:"Camilo",
+fecha:new Date("2025/05/05"),categoria:"Inteligencia Artificial"})
+
+
+
+
+{
+    $jsonSchema: {
+      required: [
+        'contenido',
+        'postId'
+      ],
+      properties: {
+        postId: {
+          bsonType: 'objectId'
+        },
+        contenido: {
+          bsonType: [
+            'array'
+          ],
+          items: {
+            bsonType: 'object',
+            required: [
+              'comentario',
+              'autor',
+              'fecha'
+            ],
+            properties: {
+              comentario: {
+                bsonType: 'string'
+              },
+              autor: {
+                bsonType: 'string'
+              },
+              fecha: {
+                bsonType: 'date'
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+db.Post.insertMany({titulo:"H2R",contenido:"Su velocidad máxima es de 300km",url:"http//yamaha/h2r.com",autor:"Daniel zr",
+fecha:new Date("2024/12/12"),categoria:"Frameworks de Desarrollo"},
+{titulo:"RX115",contenido:"La moto más rápida de 2t",url:"http//kingrx115",autor:"Cotazno",
+fecha:new Date("2023/01/01"),categoria:"Inteligencia Artificial"},
+{titulo:"Boxer ct",contenido:"La mejor moto de 100cc",url:"http//bajaj.com",autor:"Grupo uma",
+fecha:new Date("2024/12/10"),categoria:"Lenguajes de Programación"})
+
+db.Post.insertMany([{titulo:"H2R",contenido:"Su velocidad máxima es de 300km",url:"http://yamaha/h2r.com",autor:"Daniel zr",
+fecha:new Date("2024-12-12"),categoria:"Frameworks de Desarrollo"},
+{titulo:"RX115",contenido:"La moto más rápida de 2t",url:"http://kingrx115",autor:"Cotazno",
+fecha:new Date("2023-01-01"),categoria:"Inteligencia Artificial"},
+{titulo:"Boxer ct",contenido:"La mejor moto de 100cc",url:"http://bajaj.com",autor:"Grupo uma",
+fecha:new Date("2024-12-10"),categoria:"Lenguajes de Programación"}])
+
+db.Comments.insertMany([
+{postId:"",contenido:
+{comentario:"la mejor moto la vdd",autor:"Valentino",fecha:new Date("2025-03-5")}},{postId:"",contenido:
+{comentario:"la mejor moto la vdd",autor:"Valentino",fecha:new Date("2025-03-5")}},{postId:"",contenido:
+{comentario:"la mejor moto la vdd",autor:"Valentino",fecha:new Date("2025-03-5")}}])
+
+
+
+
+
+db.Comments.insertMany([{postId: ObjectId('67c8d0e013b1e1edf8991178'),contenido:[ 
+    {comentario:"El mero dt, motor aspero",autor:"Cotazno",fecha:new Date("2024-04-02")}]
+    },
+    {postId:ObjectId('67c8d30513b1e1edf899117a'),contenido:[ 
+    {comentario:"mero juguete de 115 vinotinto",autor:"casiano",fecha:new Date("2024-08-1")}]
+    },
+    {postId:ObjectId('67c8d4fe13b1e1edf8991187'),contenido:[ 
+    {comentario:"tengo la moto y es la mejor",autor:"Camilo",fecha:new Date("2024-07-014")}]
+    }])
