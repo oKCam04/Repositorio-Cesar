@@ -6,6 +6,7 @@ activate.bat
 pip freeze para ver instalaciones  
 
 pip install flask
+pip install pymysql
 
 para pasar los requerimientos en un.txt 
 pip freeze > requirements.txt
