@@ -1,11 +1,12 @@
 from app import app
-from flask import request
+from flask import request, render_template
 from models.genero import Genero
 from models.pelicula import Pelicula
 
 
+
 @app.route("/genero/",methods=["GET"])
-def listarGeneros():
+def listarGenero():
     try:
         mensaje=None
         generos= Genero.objects()
@@ -78,3 +79,18 @@ def deleteGenero():
         mensaje=str(error)
     
     return {"estado": estado, "mensaje":mensaje}
+
+@app.route("/generos/", methods=['GET'])
+def listarGeneros():
+    try:    
+        mensaje=" "
+        generos=Genero.objects()
+        
+    except Exception as error:
+         mensaje=str(error)
+    return render_template("listarGenero.html",generos=generos, mensaje=mensaje)
+
+
+@app.route("/vistaGenero/")
+def AGenero():
+    return render_template("AgregarGenero.html")

@@ -1,10 +1,10 @@
 from app import app
-from flask import request
+from flask import request, render_template
 from models.pelicula import Pelicula
 from models.genero import Genero
 
 @app.route("/pelicula/",methods=["GET"])
-def listarPeliculas():
+def listarPelicula():
     try:
         mensaje=None
         peliculas=Pelicula.objects()
@@ -75,7 +75,7 @@ def deletePelicula():
         estado= False
         if request.method=='DELETE':
             datos=request.get_json(force=True)
-            pelicula=Pelicula.objects(id=datos['id']).first()
+            pelicula = Pelicula.objects(codigo=datos['codigo']).first()
             pelicula.delete()
             estado=True
             mensaje="pelicula eliminada satisfactoriamente"
@@ -84,3 +84,14 @@ def deletePelicula():
         mensaje=str(error)
     
     return {"estado": estado, "mensaje":mensaje}
+@app.route("/peliculas/",methods=["GET"])
+def listarPeliculas():
+    peliculas= Pelicula.objects()
+    generos=Genero.objects()
+    print(generos)
+    return render_template("listarPelicula.html",
+                           peliculas=peliculas,generos=generos)
+@app.route("/agregarPelicula/",methods=["GET"])
+def AgregarPelicula():
+    generos=Genero.objects()
+    return render_template("AgregarPelicula.html", generos=generos)
