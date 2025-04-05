@@ -1,25 +1,34 @@
 from flask import Flask, render_template
 from flask_mongoengine import MongoEngine
+from dotenv import load_dotenv
+import os
+from google_recaptcha_flask import ReCaptcha
+
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key="12uyi348re589"
 
-#uri="mongodb+srv://CamiloH:admin0000@cluster0.r94m6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+uri=os.environ.get("URI")
+db=os.environ.get("DB")
 
 app.config["UPLOAD_FOLDER"]= "./static/imagenes"
 app.config['MONGODB_SETTINGS']=[{
-    "db":"gestion_peliculas",
-    "host":"localhost",
-    "port":27017
+    "db":db,
+    "host":uri
+  
 }]
+app.config.update(dict(
+GOOGLE_RECAPTCHA_ENABLED=True,
+GOOGLE_RECAPTCHA_SITE_KEY=os.environ.get("CLAVE_SITIO"),
+GOOGLE_RECAPTCHA_SECRET_KEY=os.environ.get("CLAVE_SECRETA"),
+))
+recaptcha=ReCaptcha(app)
 db=MongoEngine(app)
 
-@app.route("/")
-def login():
-    return render_template("iniciarSesion.html")
 
-@app.route("/home/")
-def home():
-    return render_template("contenido.html")
+
+
 
 
 if __name__=="__main__":

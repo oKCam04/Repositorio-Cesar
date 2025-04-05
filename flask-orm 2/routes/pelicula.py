@@ -1,7 +1,8 @@
 from app import app
-from flask import request, render_template
+from flask import Flask, request, render_template, session
 from models.pelicula import Pelicula
 from models.genero import Genero
+from bson.objectid import ObjectId
 
 @app.route("/pelicula/",methods=["GET"])
 def listarPelicula():
@@ -47,7 +48,9 @@ def updatePelicula():
         estado= False
         if request.method=='PUT':
             datos=request.get_json(force=True)
+            #obtener pelicula por id 
             pelicula=Pelicula.objects(id=datos['id']).first()
+            #actualizar sus atributos
             pelicula.codigo= datos['codigo']
             pelicula.titulo= datos['titulo']
             pelicula.protagonista= datos['protagonista']
@@ -75,23 +78,39 @@ def deletePelicula():
         estado= False
         if request.method=='DELETE':
             datos=request.get_json(force=True)
-            pelicula = Pelicula.objects(codigo=datos['codigo']).first()
-            pelicula.delete()
-            estado=True
-            mensaje="pelicula eliminada satisfactoriamente"
-            
+            pelicula = Pelicula.objects(id=datos['id']).first()
+            if pelicula is None:
+                mensaje="no se puede eliminar la pelicula"
+            else:
+                pelicula.delete()
+                estado=True
+                mensaje="pelicula eliminada satisfactoriamente"
+        else:   
+            mensaje="no permitido"
     except Exception as error:
         mensaje=str(error)
     
     return {"estado": estado, "mensaje":mensaje}
 @app.route("/peliculas/",methods=["GET"])
 def listarPeliculas():
-    peliculas= Pelicula.objects()
-    generos=Genero.objects()
-    print(generos)
-    return render_template("listarPelicula.html",
+    if ("user" in session):
+        peliculas= Pelicula.objects()
+        generos=Genero.objects()
+        return render_template("listarPelicula.html",
                            peliculas=peliculas,generos=generos)
+    else:
+        mensaje="debe ingresar primero"
+        return render_template("iniciarSesion.html", mensaje=mensaje)
 @app.route("/agregarPelicula/",methods=["GET"])
 def AgregarPelicula():
     generos=Genero.objects()
     return render_template("AgregarPelicula.html", generos=generos)
+
+@app.route("/editarPelicula/<string:id>/",methods=["GET"])
+def EditarPelicula(id):
+    peliculas=Pelicula.objects(id=ObjectId(id)).first()
+    generos=Genero.objects()
+    
+    return render_template("EditarPelicula.html", peliculas=peliculas, generos=generos)
+
+

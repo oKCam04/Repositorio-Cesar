@@ -1,55 +1,66 @@
-from app import app
-from flask import request
+from app import app,db,recaptcha
+from flask import Flask, request, render_template, session
 from models.usuario import Usuario
+import yagmail
+import threading
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
-@app.route("/usuario/", methods=["GET"])
-def listarUsuarios():
+@app.route("/")
+def login():
+    return render_template("iniciarSesion.html")
+
+@app.route("/usuario/",methods=["GET"])
+def listarUsuario():
     try:
-        usuarios = Usuario.objects()
-        return {"estado": True, "usuarios": usuarios}
+        mensaje=None
+        usuarios=Usuario.objects()
     except Exception as error:
-        return {"estado": False, "mensaje": str(error)}
+        mensaje=str(error)
+    return {"mensaje": mensaje,"usuarios": usuarios}
 
+@app.route("/home/")
+def home():
+    return render_template("contenido.html")
 
-@app.route("/usuario/", methods=["POST"])
-def addUsuario():
+@app.route("/iniciarSesion/",methods=["POST"])
+def iniciarSesion():
+    mensaje=" "
     try:
-        datos = request.get_json(force=True)
-        usuario = Usuario(**datos)
-        usuario.save()
-        return {"estado": True, "mensaje": "Usuario agregado correctamente"}
+        if request.method=='POST':
+            if recaptcha.verify():
+                print("SUCCESS")
+            else:
+                print("FAILED")
+            username = request.form['txtUser']
+            password = request.form['txtPassword']
+
+            usuario=Usuario.objects(usuario=username,password=password).first()
+            correo=os.environ.get("CORREO")
+            clave=os.environ.get("ENVIAR_CORREO")
+            if usuario:
+                session['user']=username
+                session['user_name']=f"{usuario.nombres} {usuario.apellidos}"
+                email= yagmail.SMTP(correo,clave, encoding="utf-8")
+                asunto="Ingreso al sistema"
+                mensaje=f"ha ingresado al aplicativo {usuario.nombres} {usuario.apellidos}"
+                thread=threading.Thread(target=enviarCorreo, args=(email, [usuario.correo], asunto,mensaje))
+                thread.start()
+                return render_template("contenido.html")
+            else:
+                mensaje="credenciales incorrectas"
     except Exception as error:
-        return {"estado": False, "mensaje": str(error)}
+        mensaje=str(error)
 
-
-@app.route("/usuario/", methods=["PUT"])
-def updateUsuario():
-    try:
-        datos = request.get_json(force=True)
-        usuario = Usuario.objects(usuario=datos['usuario']).first()
-        if usuario:
-            usuario.update(
-                set__password=datos['password'],
-                set__nombre_completo=datos['nombre_completo'],
-                set__correo=datos['correo']
-            )
-            return {"estado": True, "mensaje": "Usuario actualizado"}
-        else:
-            return {"estado": False, "mensaje": "Usuario no encontrado"}
-    except Exception as error:
-        return {"estado": False, "mensaje": str(error)}
-
-
-@app.route("/usuario/", methods=["DELETE"])
-def deleteUsuario():
-    try:
-        datos = request.get_json(force=True)
-        usuario = Usuario.objects(usuario=datos['usuario']).first()
-        if usuario:
-            usuario.delete()
-            return {"estado": True, "mensaje": "Usuario eliminado correctamente"}
-        else:
-            return {"estado": False, "mensaje": "Usuario no encontrado"}
-    except Exception as error:
-        return {"estado": False, "mensaje": str(error)}
+    return render_template("iniciarSesion.html", mensaje=mensaje)
+def enviarCorreo(email=None, destinatario=None, asunto=None, mensaje=None):
+   email.send(to=destinatario, subject=asunto, contents=mensaje)
+    
+@app.route("/cerrarSesion/")
+def cerrarSesion():
+    session.clear()
+    mensaje="sesion cerrada"
+    return render_template("iniciarSesion.html", mensaje=mensaje)

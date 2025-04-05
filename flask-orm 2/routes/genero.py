@@ -2,7 +2,7 @@ from app import app
 from flask import request, render_template
 from models.genero import Genero
 from models.pelicula import Pelicula
-
+from bson.objectid import ObjectId
 
 
 @app.route("/genero/",methods=["GET"])
@@ -94,3 +94,13 @@ def listarGeneros():
 @app.route("/vistaGenero/")
 def AGenero():
     return render_template("AgregarGenero.html")
+
+@app.route("/editarGenero/<id>", methods=["GET"])
+def editarGenero(id):
+    try:
+        mensaje=" "
+        genero=Genero.objects(id=ObjectId(id)).first()
+        print(genero)
+    except Exception as error:
+        mensaje=str(error)
+    return render_template("EditarGenero.html",genero=genero, mensaje=mensaje)

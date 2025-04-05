@@ -1,54 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .login-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-   <script src="../static/js/app.js"></script>
-    <div class="login-container">
-        <h2>Iniciar Sesión</h2>
-        <form>
-            <input type="email" name="correo" placeholder="Correo Electrónico" >
-            <input type="password" name="password" placeholder="Contraseña" >
-            <button type="submit"  onclick="ingresar()">Ingresar</button>
+{% extends "index.html" %}
+
+
+
+{% block contenido %}
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <div class="iniciarSesion w-25 bg-body-secondary mt-3" style="margin: 0 auto">
+        <h3 class="text-center fw-bold">INICIAR SESIÓN</h3>
+        <form action="/iniciarSesion/" method="post" class="w-75" method="post" style="margin: 0 auto">
+            <div class="input-group mb-3">
+                <span class="input-group-text">@</span>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="txtUser" id="txtUser" 
+                    placeholder="Username">
+                    <label for="txtUser">Username</label>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa fa-eye"></i></span>
+                <div class="form-floating">
+                    <input type="password" class="form-control" name="txtPassword" id="txtPassword"
+                    placeholder="Password">
+                    <label for="txtPassword">Contraseña:</label>
+                </div>
+            </div>
+            {{recaptcha}}
+            <div class="mt-2 mb-2">
+                <button class="btn btn-dark">Ingresar</button>
+                <button class="btn btn-secondary">Cancelar</button>
+            </div>
         </form>
     </div>
-</body>
-</html>
+
+    {% if mensaje %}
+    <script>
+        Swal.fire("Inicio de sesión",'{{mensaje}}',"info")
+    </script>
+    {% endif %}
+
+{% endblock %}
